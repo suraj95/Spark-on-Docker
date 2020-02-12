@@ -1,16 +1,18 @@
 # Start Spark Cluster
 Currently only supports one worker, will keep updating as I make progress.
+
 	docker-compose up --scale worker=[NUM_WORKERS]
 
 # Running Spark Applications
-We connect to the container with the Master node as follows:
+We connect to the container with the Master node as follows
+
 	docker exec -it spark-on-docker_master_1 /bin/bash 
 
 # Scala Examples
 Once we are connected to the Master Container, we can run Spark application in the examples as follows
+	
 	# 1. Calculate the Value of Pi
 	bin/run-example SparkPi 10
-
 	# 2. Linear regression with elastic-net (mixing L1/L2) regularization
 	bin/run-example ml.LinearRegressionExample --regParam 0.15 --elasticNetParam 1.0 data/mllib/sample_linear_regression_data.txt
 
