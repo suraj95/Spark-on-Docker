@@ -1,16 +1,13 @@
-
 # Start Spark Cluster
-
-docker-compose up --scale worker=[NUM_WORKERS]
+Currently only supports one worker, will keep updating as I make progress.
+	docker-compose up --scale worker=[NUM_WORKERS]
 
 # Running Spark Applications
-
-docker exec -it spark-on-docker_master_1 /bin/bash 
-
-	# After Master node starts, we can submit Spark jobs as follows
+We connect to the container with the Master node as follows:
+	docker exec -it spark-on-docker_master_1 /bin/bash 
 
 # Scala Examples
-
+Once we are connected to the Master Container, we can run Spark application in the examples as follows
 	# 1. Calculate the Value of Pi
 	bin/run-example SparkPi 10
 
@@ -37,7 +34,7 @@ docker exec -it spark-on-docker_master_1 /bin/bash
 
 # We may have to run some commands on worker nodes (install new packages)
 	
-docker exec -it spark-on-docker_worker_1 /bin/bash
+	docker exec -it spark-on-docker_worker_1 /bin/bash
 
 	# After worker nodes starts, we can access its shell and post commands
 	pip install numpy
@@ -48,5 +45,5 @@ docker exec -it spark-on-docker_worker_1 /bin/bash
 	docker rm $(docker ps -a -q)
 
 # Clean up network
-
-docker-compose down
+Despite stopping and removing previous containers, you may get issues like "port is already allocated". So it is good practice to run this command as it removes previously used networks. You may have to restart Docker desktop if issue still persists.
+	docker-compose down
