@@ -1,7 +1,9 @@
 version: "3.7"
 services:
   master:
-    image: gettyimages/spark
+    build:
+      context: .
+      dockerfile: DockerfilePython
     command: bin/spark-class org.apache.spark.deploy.master.Master -h master
     hostname: master
     environment:
@@ -26,7 +28,9 @@ services:
       - ./data:/tmp/data
 
   worker:
-    image: gettyimages/spark
+    build:
+      context: .
+      dockerfile: DockerfilePython
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
     hostname: worker
     environment:
