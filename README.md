@@ -46,4 +46,5 @@ Once we are connected to the Master Container, we can run Spark application in t
 
 # Clean up network
 Despite stopping and removing previous containers, you may get issues like "port is already allocated". So it is good practice to run this command as it removes previously used networks. You may have to restart Docker desktop if issue still persists.
+
 	docker-compose down
