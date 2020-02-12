@@ -44,8 +44,8 @@ docker exec -it spark-on-docker_worker_1 /bin/bash
 
 # Stop and Remove all running containers
 
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
+	docker stop $(docker ps -a -q)
+	docker rm $(docker ps -a -q)
 
 # Clean up network
 
