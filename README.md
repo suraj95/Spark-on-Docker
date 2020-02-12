@@ -5,7 +5,7 @@ docker-compose up --scale worker=[NUM_WORKERS]
 
 # Running Spark Applications
 
-docker exec -it sparkondocker_master_1 /bin/bash 
+docker exec -it spark-on-docker_master_1 /bin/bash 
 
 	# After Master node starts, we can submit Spark jobs as follows
 
@@ -37,7 +37,7 @@ docker exec -it sparkondocker_master_1 /bin/bash
 
 # We may have to run some commands on worker nodes (install new packages)
 	
-docker exec -it sparkondocker_worker_1 /bin/bash
+docker exec -it spark-on-docker_worker_1 /bin/bash
 
 	# After worker nodes starts, we can access its shell and post commands
 	pip install numpy
