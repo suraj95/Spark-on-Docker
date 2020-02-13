@@ -17,7 +17,7 @@ Master will be running at localhost:8080 and workers will be running at localhos
 
 # Running Spark Applications
 
-We connect to the container running the Master worker as follows
+We connect to the container running the Master as follows
 
 	docker exec -it spark-on-docker_master_1 /bin/bash 
 

@@ -1,0 +1,22 @@
+Get numpy in a docker container
+— https://stackoverflow.com/questions/57763773/install-numpy-requirement-in-a-dockerfile-results-in-error
+
+Docker compose: ports and expose
+- https://stackoverflow.com/questions/40801772/what-is-the-difference-between-docker-compose-ports-vs-expose
+
+Spark Configuration: memory/instance/cores
+- https://stackoverflow.com/questions/26645293/spark-configuration-memory-instance-cores
+
+Setting up a Scalable Spark Infrastructure with Docker
+- https://www.pavanpkulkarni.com/blog/13-spark-on-docker/
+
+Number of Cores vs Number of Executors
+- https://stackoverflow.com/questions/24622108/apache-spark-the-number-of-cores-vs-the-number-of-executors
+
+How to tune your Apache Spark Jobs
+- https://blog.cloudera.com/how-to-tune-your-apache-spark-jobs-part-2/
+
+Spark Executor Tuning
+- https://www.youtube.com/watch?v=V9E-bWarMNw
+
+
