@@ -4,7 +4,7 @@ services:
   master:
     build:
       context: .
-      dockerfile: DockerfilePython
+      dockerfile: docker/Dockerfile
     command: bin/spark-class org.apache.spark.deploy.master.Master -h master
     hostname: master
     environment:
@@ -25,7 +25,7 @@ services:
   worker1:
     build:
       context: .
-      dockerfile: DockerfilePython
+      dockerfile: docker/Dockerfile
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
     hostname: worker1
     environment:
@@ -50,7 +50,7 @@ services:
   worker2:
     build:
       context: .
-      dockerfile: DockerfilePython
+      dockerfile: docker/Dockerfile
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
     hostname: worker1
     environment:
@@ -75,7 +75,7 @@ services:
   worker3:
     build:
       context: .
-      dockerfile: DockerfilePython
+      dockerfile: docker/Dockerfile
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
     hostname: worker3
     environment:

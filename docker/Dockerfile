@@ -29,13 +29,17 @@ ENV PYTHONHASHSEED 0
 ENV PYTHONIOENCODING UTF-8
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
-# Below are the dependencies required for installing the common combination of numpy, scipy, pandas and matplotlib 
-# in an Alpine based Docker image.
-FROM alpine:3.4
-RUN echo "http://dl-8.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-RUN apk --no-cache --update-cache add gcc gfortran python python-dev py-pip build-base wget freetype-dev libpng-dev openblas-dev
-RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
-RUN pip install numpy scipy pandas matplotlib
+# to download numpy these 5 packages + their dependencies must be installed:
+
+# Python3 - 70 mb
+# Python3-dev - 25 mb
+# gfortran - 20 mb
+# gcc - 70 mb
+# musl-dev -10 mb (used for tracking unexpected behaviour/debugging)
+
+ADD requirements-pip.txt .
+RUN pip3 install --upgrade pip setuptools && \
+    pip3 install -r requirements-pip.txt
 
 # JAVA
 RUN apt-get update \

@@ -7,7 +7,7 @@ Ports mentioned will be shared among different services started by the docker-co
 
 Expose basically "exposes" ports without publishing them to the host machine - they’ll only be accessible to linked services. Only the internal port can be specified. Activates container to listen for a specific port only from the world inside of docker AND not accessible world outside of the docker.
 
-	docker-compose up
+	./build_images.sh
 
 Spark master is application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on given worker node.Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
 
@@ -20,7 +20,6 @@ We connect to the container running the Master worker as follows
 	docker exec -it spark-on-docker_master_1 /bin/bash 
 
 # Scala Examples
-Once we are connected to the Master Container, we can run Spark application in the examples as follows
 	
 	# 1. Calculate the Value of Pi
 	bin/run-example SparkPi 10

@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set -e
+# Spark Configuration Variables (memory, instance, cores)
 
-docker build -t spark-base:latest ./docker/base
-docker build -t spark-master:latest ./docker/spark-master
-docker build -t spark-worker:latest ./docker/spark-worker
-docker build -t spark-submit:latest ./docker/spark-submit
+# SPARK_WORKER_MEMORY: The System memory to be used by worker for creating executors on node. 
+# SPARK_MASTER_MEMORY: The memory for master. Should not be to high :)
+# SPARK_WORKER_CORES: The total number of cores to be used by executors by each worker
+# SPARK_WORKER_INSTANCES: The number of workers per worker node.
+
+docker-compose up
