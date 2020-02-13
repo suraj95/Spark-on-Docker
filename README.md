@@ -1,4 +1,5 @@
 # Start Spark Cluster
+
 Currently supports one master and three workers, will keep updating as I make progress, like being able dynamically scale workers up and down.
 
 The docker-compose.yml refers to two important properties, namely ports and expose
@@ -15,6 +16,7 @@ Master will be running at localhost:8080 and workers will be running at localhos
 
 
 # Running Spark Applications
+
 We connect to the container running the Master worker as follows
 
 	docker exec -it spark-on-docker_master_1 /bin/bash 
@@ -58,6 +60,7 @@ We connect to the container running the Master worker as follows
 
 
 # Clean up network
+
 Despite stopping and removing previous containers, you may get issues like "port is already allocated". So it is good practice to run this command as it removes previously used networks. You may have to restart Docker desktop if issue still persists.
 
 	docker-compose down
