@@ -10,7 +10,7 @@ Expose basically "exposes" ports without publishing them to the host machine - t
 
 	./build_images.sh
 
-Spark master is application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on given worker node.Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
+Spark Master is an application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on given worker node.Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
 
 Master will be running at localhost:8080 and workers will be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I have currently just manually copy pasted configurations in the docker-compose file for each worker, but there should be a more efficient way to do this. 
 
