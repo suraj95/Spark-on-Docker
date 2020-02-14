@@ -17,9 +17,17 @@ Master will be running at localhost:8080 and workers will be running at localhos
 
 # Running Spark Applications
 
-We connect to the container running the Master as follows
+At the top of the execution hierarchy are Spark jobs. Invoking an action inside a Spark application triggers the launch of a Spark job to fulfill it. The execution plan consists of assembling the job’s transformations into stages. A stage corresponds to a collection of tasks that all execute the same code, each on a different subset of the data. Each stage contains a sequence of transformations that can be completed without shuffling the full data. 
+
+![alt text](screenshots/spark-architecture)
+
+An RDD comprises a fixed number of partitions, each of which comprises a number of records. For the RDDs returned by so-called narrow transformations like map and filter, the records required to compute the records in a single partition reside in a single partition in the parent RDD. Each object is only dependent on a single object in the parent. In wide transformation like groupByKey and reduceByKey, the data required to compute the records in a single partition may reside in many partitions of the parent RDD. All of the tuples with the same key must end up in the same partition, processed by the same task.
+At each stage boundary, data is written to disk by tasks in the parent stages and then fetched over the network by tasks in the child stage. Because they incur heavy disk and network I/O, stage boundaries can be expensive and should be avoided when possible. Just as the number of reducers is an important parameter in tuning MapReduce jobs, tuning the number of partitions at stage boundaries can often make or break an application’s performance. And the primary goal when choosing an arrangement of operators is to reduce the number of shuffles and the amount of data shuffled, because shuffles are expensive. But there is an occasional exception to the rule of minimizing the number of shuffles. But an extra shuffle can be advantageous to performance in an exceptional case when it increases parallelism.
+
+We connect to the docker container running the Master as follows
 
 	docker exec -it spark-on-docker_master_1 /bin/bash 
+
 
 # Scala Examples
 	
@@ -45,12 +53,25 @@ We connect to the container running the Master as follows
 	# 5. A Multilayer Perceptron Classifier with four layers: input layer of 4 features, two intermediate layers (size of 5 and 4), and finally an output layer of 3 classes
 	bin/spark-submit examples/src/main/python/ml/multilayer_perceptron_classification.py
 
-# We may have to run some commands on worker nodes (install new packages)
+
+# We may have to run some commands on worker container (install new packages)
 	
 	docker exec -it spark-on-docker_worker_1 /bin/bash
 
-	# After worker nodes starts, we can access its shell and post commands
+	# After worker container starts, we can access its shell and post commands
 	pip install numpy
+
+
+# Tuning our Spark jobs
+
+The two main resources that Spark (and YARN) think about are CPU and memory. Every Spark executor in an application has the same fixed number of cores and same fixed heap size. The cores property controls the number of concurrent tasks an executor can run. The memory property impacts the amount of data Spark can cache, as well as the maximum sizes of the shuffle data structures used for grouping, aggregations, and joins. Running executors with too much memory often results in excessive garbage collection delays. In the industry, 64GB is a rough guess at a good upper limit for a single executor. And the HDFS client has trouble with tons of concurrent threads, so at most 5 tasks per executor can achieve full write throughput. Spark is a parallel processing engine, but is limited in its ability to figure out the optimal amount of parallelism. 
+Every Spark stage has a number of tasks, each of which processes data sequentially. In tuning Spark jobs, this number is probably the single most important parameter in determining performance. This number determined by the way Spark groups RDDs into stages. 
+
+![alt text](screenshots/memory-heirarchy)
+
+The number of tasks in a stage is the same as the number of partitions in the last RDD in the stage. The number of partitions in an RDD is the same as the number of partitions in the RDD on which it depends. And for RDDs with no parents (RDDs produced by textFile or hadoopFile)have their partitions determined by the underlying MapReduce InputFormat that’s used. The primary concern is if the number of tasks is too small, then there are fewer tasks than slots available to run them in, the stage won’t be taking advantage of all the CPU available. A small number of tasks also mean that more memory pressure is placed on any aggregation operations that occur in each task. When the records destined for these aggregation operations do not easily fit in memory, some mayhem can ensue. First, holding many records in these data structures puts pressure on garbage collection, which can lead to pauses down the line. Second, when the records do not fit in memory, Spark will spill them to disk, which causes disk I/O and sorting.  This overhead during large shuffles is probably the number one cause of job stalls in the at industry. The in-memory size of the total shuffle data is hard to determine. The closest heuristic is to find the ratio between Shuffle Spill (Memory) metric and the Shuffle Spill (Disk) for a stage that ran. Then multiply the total shuffle write by this number. 
+
+Data flows through Spark in the form of records. A record has two representations: a deserialized Java object representation and a serialized binary representation. In general, Spark uses the deserialized representation for records in memory and the serialized representation for records stored on disk or being transferred over the network. The footprint of your records in these two representations has a massive impact on Spark performance. Bloated deserialized objects will result in Spark spilling data to disk more often and reduce the number of deserialized records Spark can cache (e.g. at the MEMORY storage level). Bloated serialized objects will result in greater disk and network I/O, as well as reduce the number of serialized records Spark can cache (e.g. at the MEMORY_SER storage level). Whenever you have the power to make the decision about how data is stored on disk, use an extensible binary format like Avro, Parquet, Thrift, or Protobuf. Pick one of these formats and stick to it. To be clear, when one talks about using Avro, Thrift, or Protobuf on Hadoop, they mean that each record is a Avro/Thrift/Protobuf struct stored in a sequence file. JSON is just not worth it.
 
 
 # Stop and Remove all running containers
