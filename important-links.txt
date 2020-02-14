@@ -19,4 +19,7 @@ How to tune your Apache Spark Jobs
 Spark Executor Tuning
 - https://www.youtube.com/watch?v=V9E-bWarMNw
 
+Python vs Scala
+- https://www.kdnuggets.com/2018/05/apache-spark-python-scala.html
+
 
