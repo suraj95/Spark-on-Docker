@@ -9,9 +9,10 @@ The docker-compose.yml refers to two important properties, namely ports and expo
 
 2. Expose basically "exposes" ports without publishing them to the host machine - they’ll only be accessible to linked services. Only the internal port can be specified. Activates container to listen for a specific port only from the world inside of docker AND not accessible world outside of the docker.
 
-		./build_images.sh
+Spark Master is an application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on given worker node. Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
 
-Spark Master is an application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on given worker node.Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
+
+	./build_images.sh
 
 Master will be running at localhost:8080 and workers will be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I have currently just manually copy pasted configurations in the docker-compose file for each worker, but there should be a more efficient way to do this. I will keep you posted.
 
@@ -28,7 +29,7 @@ At each stage boundary, data is written to disk by tasks in the parent stages an
 
 We connect to the docker container running the Master as follows:
 
-		docker exec -it spark-on-docker_master_1 /bin/bash 
+	docker exec -it spark-on-docker_master_1 /bin/bash 
 
 Language choice for programming in Apache Spark depends on the features that best fit the project needs, as each one has its own pros and cons. Python is more analytical oriented while Scala is more engineering oriented but both are great languages for building Data Science applications. 
 
@@ -37,38 +38,38 @@ Language choice for programming in Apache Spark depends on the features that bes
 
 Scala is a statically typed language which allows us to find compile time errors. Spark is written in Scala as it can be quite fast because it's statically typed and it compiles in a known way to the JVM. Scala is frequently over 10 times faster than Python. Moreover Scala is native for Hadoop as its based on JVM. Hadoop is important because Spark was made on the top of the Hadoop's filesystem HDFS. Scala interacts with Hadoop via native Hadoop's API in Java. That's why it's very easy to write native Hadoop applications in Scala. Scala may be a bit more complex to learn in comparison to Python due to its high-level functional features. But Scala is always more powerful in terms of framework, libraries, implicit, macros etc. And Scala works well within the MapReduce framework because of its functional nature. 
 	
-		# 1. Calculate the Value of Pi
-			bin/run-example SparkPi 10
+	# 1. Calculate the Value of Pi
+		bin/run-example SparkPi 10
 
-		# 2. Linear regression with elastic-net (mixing L1/L2) regularization
-			bin/run-example ml.LinearRegressionExample --regParam 0.15 --elasticNetParam 1.0 data/mllib/sample_linear_regression_data.txt
+	# 2. Linear regression with elastic-net (mixing L1/L2) regularization
+		bin/run-example ml.LinearRegressionExample --regParam 0.15 --elasticNetParam 1.0 data/mllib/sample_linear_regression_data.txt
 
 # Python Examples
 
 Python is dynamically typed and this reduces the speed and makes it higly prone to bugs every time you make changes to the code. Compiled languages are faster than interpreted.  Spark libraries have to called which require a lot of code processing and hence slower performance. Python interacts with Hadoop services very badly, so developers have to use 3rd party libraries (like hadoopy). But Python has simple syntax and good standard libraries, so it is preferable for simple intuitive logic whereas Scala is more useful for complex workflows. But for complex machine learning applications like NLP, Graphs and visualization, Python is preferred as Scala doesn’t have many tools for it. 
 
-		# 1. Calculate the number of words in a text file
-			bin/spark-submit examples/src/main/python/wordcount.py data/mllib/images/license.txt
+	# 1. Calculate the number of words in a text file
+		bin/spark-submit examples/src/main/python/wordcount.py data/mllib/images/license.txt
 
-		# 2. Calculate the Pagerank for a bunch of web page urls 
-			bin/spark-submit examples/src/main/python/pagerank.py data/mllib/pagerank_data.txt 10
+	# 2. Calculate the Pagerank for a bunch of web page urls 
+		bin/spark-submit examples/src/main/python/pagerank.py data/mllib/pagerank_data.txt 10
 
-		# 3. Demonstrate K-means clustering and calculate euclidian distance (requires numpy)
-			bin/spark-submit examples/src/main/python/ml/kmeans_example.py
+	# 3. Demonstrate K-means clustering and calculate euclidian distance (requires numpy)
+		bin/spark-submit examples/src/main/python/ml/kmeans_example.py
 
-		# 4. An ML Pipeline which consists of three stages: tokenizer, hashingTF, and logistic regression.
-			bin/spark-submit examples/src/main/python/ml/pipeline_example.py
+	# 4. An ML Pipeline which consists of three stages: tokenizer, hashingTF, and logistic regression.
+		bin/spark-submit examples/src/main/python/ml/pipeline_example.py
 
-		# 5. A Multilayer Perceptron Classifier with four layers: input layer of 4 features, two intermediate layers (size of 5 and 4), and finally an output layer of 3 classes 
-			bin/spark-submit examples/src/main/python/ml/multilayer_perceptron_classification.py
+	# 5. A Multilayer Perceptron Classifier with four layers: input layer of 4 features, two intermediate layers (size of 5 and 4), and finally an output layer of 3 classes 
+		bin/spark-submit examples/src/main/python/ml/multilayer_perceptron_classification.py
 
 
 # We may have to run some commands on worker container (install new packages)
 	
-		docker exec -it spark-on-docker_worker_1 /bin/bash
+	docker exec -it spark-on-docker_worker_1 /bin/bash
 
-		# After worker container starts, we can access its shell and post commands
-			pip install numpy
+	# After worker container starts, we can access its shell and post commands
+		pip install numpy
 
 
 # Tuning our Spark jobs
@@ -85,12 +86,12 @@ Data flows through Spark in the form of records. A record has two representation
 
 # Stop and Remove all running containers
 
-		docker stop $(docker ps -a -q)
-		docker rm $(docker ps -a -q)
+	docker stop $(docker ps -a -q)
+	docker rm $(docker ps -a -q)
 
 
 # Clean up network
 
 Despite stopping and removing previous containers, you may get issues like "port is already allocated". So it is good practice to run this command as it removes previously used networks. You may have to restart Docker desktop if issue still persists.
 
-		docker-compose down
+	docker-compose down
