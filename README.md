@@ -1,6 +1,6 @@
 # Start Spark Cluster
 
-This currently supports one master and upto 5 workers (beyond which the cluster can get hanged). I will keep updating as I make progress.
+This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number of workers for most student requirements. I will keep updating as I make progress.
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
 
