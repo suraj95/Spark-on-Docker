@@ -17,12 +17,12 @@ services:
       - 4040:4040
       - 6066:6066
       - 7077:7077
-      - 8080:8080
+    #  - 8080:8080 This port is now used by Traefik web-proxy
     volumes:
       - ./conf/master:/conf
       - ./data:/tmp/data
 
-  worker1:
+  worker:
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -32,8 +32,8 @@ services:
       SPARK_CONF_DIR: /conf
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
-      SPARK_WORKER_PORT: 8881
-      SPARK_WORKER_WEBUI_PORT: 8081
+  #    SPARK_WORKER_PORT: 8881
+  #    SPARK_WORKER_WEBUI_PORT: 8081
       SPARK_PUBLIC_DNS: localhost
     links:
       - master
@@ -41,58 +41,71 @@ services:
       - 8881
       - 8882
       - 8883
-    ports:
-      - 8081:8081
+  #  ports:
+  #    - 8081:8081
     volumes:
       - ./conf/worker1:/conf
       - ./data:/tmp/data
 
-  worker2:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
-    hostname: worker1
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 1g
-      SPARK_WORKER_PORT: 8882
-      SPARK_WORKER_WEBUI_PORT: 8082
-      SPARK_PUBLIC_DNS: localhost
-    links:
-      - master
-    expose:
-      - 8881
-      - 8882
-      - 8883
+  reverse-proxy:
+    image: traefik
+    command: 
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
-      - 8082:8082
+      - "80:80"     # The HTTP port
+      - "8080:8080" # The Web UI (enabled by --api)
     volumes:
-      - ./conf/worker2:/conf
-      - ./data:/tmp/data
+      - "/var/run/docker.sock:/var/run/docker.sock:ro" # So that Traefik can listen to the Docker events
 
-  worker3:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
-    hostname: worker3
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 1g
-      SPARK_WORKER_PORT: 8883
-      SPARK_WORKER_WEBUI_PORT: 8083
-      SPARK_PUBLIC_DNS: localhost
-    links:
-      - master
-    expose:
-      - 8881
-      - 8882
-      - 8883
-    ports:
-      - 8083:8083
-    volumes:
-      - ./conf/worker3:/conf
-      - ./data:/tmp/data
+  # worker2:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
+  #   hostname: worker1
+  #   environment:
+  #     SPARK_CONF_DIR: /conf
+  #     SPARK_WORKER_CORES: 2
+  #     SPARK_WORKER_MEMORY: 1g
+  #     SPARK_WORKER_PORT: 8882
+  #     SPARK_WORKER_WEBUI_PORT: 8082
+  #     SPARK_PUBLIC_DNS: localhost
+  #   links:
+  #     - master
+  #   expose:
+  #     - 8881
+  #     - 8882
+  #     - 8883
+  #   ports:
+  #     - 8082:8082
+  #   volumes:
+  #     - ./conf/worker2:/conf
+  #     - ./data:/tmp/data
+
+  # worker3:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
+  #   hostname: worker3
+  #   environment:
+  #     SPARK_CONF_DIR: /conf
+  #     SPARK_WORKER_CORES: 2
+  #     SPARK_WORKER_MEMORY: 1g
+  #     SPARK_WORKER_PORT: 8883
+  #     SPARK_WORKER_WEBUI_PORT: 8083
+  #     SPARK_PUBLIC_DNS: localhost
+  #   links:
+  #     - master
+  #   expose:
+  #     - 8881
+  #     - 8882
+  #     - 8883
+  #   ports:
+  #     - 8083:8083
+  #   volumes:
+  #     - ./conf/worker3:/conf
+  #     - ./data:/tmp/dat

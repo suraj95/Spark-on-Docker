@@ -1,7 +1,6 @@
 # Start Spark Cluster
 
-This Currently supports one master and three workers, which I have hardcoded in the docker-compose.yml file. I
-will keep updating as I make progress on being able to dynamically scale the number of workers up and down.
+This Currently supports one master and three workers, which I have hardcoded in the docker-compose.yml file. I will keep updating as I make progress on being able to dynamically scale the number of workers up and down.
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
 
@@ -16,6 +15,7 @@ Spark Master is an application that coordinates resources allocation from slaves
 
 Master will be running at localhost:8080 and workers will be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I have currently just manually copy pasted configurations in the docker-compose file for each worker, but there should be a more efficient way to do this. I will keep you posted.
 
+Docker "scale" command is deprecated in version 3, and we cannot use "replicas" option in "deploy" setting of the docker-compose.yml file because it only takes effect when deploying to a swarm with docker stack deploy, and is ignored by docker-compose up and docker-compose run.
 
 # Running Spark Applications
 
@@ -59,8 +59,7 @@ Python is dynamically typed and this reduces the speed and makes it higly prone 
 	#4. An ML Pipeline which consists of three stages: tokenizer, hashingTF, and logistic regression.
 		bin/spark-submit examples/src/main/python/ml/pipeline_example.py
 
-	#5. A Multilayer Perceptron Classifier with four layers: input layer of 4 features, 
-		two intermediate layers (size of 5 and 4), and finally an output layer of 3 classes 
+	#5. A Multilayer Perceptron Classifier with four layers (4,5,4,3): 
 		bin/spark-submit examples/src/main/python/ml/multilayer_perceptron_classification.py
 
 ## We may have to run some commands on worker container (install new packages)
@@ -88,7 +87,13 @@ Whenever you have the power to make the decision about how data is stored on dis
 
 ![alt text](./screenshots/SequenceFile.png)
 
-The small file problem arises when many small files cause memory overhead for the namenode referencing large amounts of small files. The concept of SequenceFile is to put each small file to a larger single file. For example, suppose there are 10,000 100KB files, then we can write a program to put them into a single SequenceFile like above, where you can use filename to be the key and content to be the value. Sequence file is written to hold multiple key-value pairs and the key is a unique file metadata, like ingest filename or filename+timestamp and value is the content of the ingested file. Now you have a single file holding many ingested files as splittable key-value pairs. So if you loaded it into pig or hive, and grouped by key, then each file content would be its own record.
+The small file problem arises when many small files cause memory overhead for the namenode referencing large amounts of small files. The concept of SequenceFile is to put each small file to a larger single file. For example, suppose there are 10,000 files of size 100KB, then we can write a program to put them into a single SequenceFile like above, where you can use filename to be the key and content to be the value. Sequence file is written to hold multiple key-value pairs and the key is a unique file metadata, like ingest filename or filename+timestamp and value is the content of the ingested file. Now you have a single file holding many ingested files as splittable key-value pairs. So if you loaded it into pig or hive, and grouped by key, then each file content would be its own record.
+
+## Scaling our Workers
+
+We can use the --scale flag while doing docker-compose up, but it initially gave me errors that "port is already allocated" as I could not statically assign ports to workers that were dynamically created. They were all automatically getting assigned to port 80 as mentioned in the docker-compose file, and because that port is already occupied, the container was failing. So what I did is I set up a load balancer container and expose my worker containers ports to the load balancer and a Redis Database
+
+Redis is often referred as a *data structures* server. What this means is that Redis provides access to mutable data structures via a set of commands, which are sent using a *server-client* model with TCP sockets and a simple protocol. So different processes can query and modify the same data structures in a shared way. You'll need to use a Redis client to connect to Redis, not your browser. Look at this page for a few https://redis.io/clients, or use redis-cli, or even just plain Telnet.
 
 
 # Stop and Remove all running containers
