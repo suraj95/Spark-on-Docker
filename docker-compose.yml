@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
-    hostname: worker1
+    hostname: worker
     environment:
       SPARK_CONF_DIR: /conf
       SPARK_WORKER_CORES: 2
@@ -39,7 +39,7 @@ services:
       - 8882
       - 8883
     volumes:
-      - ./conf/worker1:/conf
+      - ./conf/worker:/conf
       - ./data:/tmp/data
 
   reverse-proxy:
