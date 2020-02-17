@@ -13,9 +13,7 @@ Spark Master is an application that coordinates resources allocation from slaves
 
 	./build_cluster.sh
 
-Master will be running at localhost:8080 and workers will be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I have currently just manually copy pasted configurations in the docker-compose file for each worker, but there should be a more efficient way to do this. I will keep you posted.
-
-Docker "scale" command is deprecated in version 3, and we cannot use "replicas" option in "deploy" setting of the docker-compose.yml file because it only takes effect when deploying to a swarm with docker stack deploy, and is ignored by docker-compose up and docker-compose run.
+Before I used a load balancer, Master was running at localhost:8080 and workers were be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I had to  manually copy pasted configurations in the docker-compose.yml file for each worker. And the Docker "scale" command is deprecated in version 3, and we cannot use "replicas" option in "deploy" setting of the docker-compose.yml file because it only takes effect when deploying to a swarm with docker stack deploy, and is ignored by docker-compose up and docker-compose run.
 
 # Running Spark Applications
 
