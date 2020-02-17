@@ -11,7 +11,7 @@ The docker-compose.yml refers to two important properties, namely ports and expo
 Spark Master is an application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on a given worker node. Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
 
 
-	./build_images.sh
+	./build_cluster.sh
 
 Master will be running at localhost:8080 and workers will be running at localhost:8081, localhost:8082 and localhost:8083 respectively (refer to screenshots folder). I have currently just manually copy pasted configurations in the docker-compose file for each worker, but there should be a more efficient way to do this. I will keep you posted.
 
