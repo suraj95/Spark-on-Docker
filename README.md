@@ -1,6 +1,6 @@
 # Start Spark Cluster
 
-This Currently supports one master and three workers, which I have hardcoded in the docker-compose.yml file. I will keep updating as I make progress on being able to dynamically scale the number of workers up and down.
+This currently supports one master and upto 5 workers (beyond which the cluster can get hanged). I will keep updating as I make progress.
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
 
@@ -91,9 +91,7 @@ The small file problem arises when many small files cause memory overhead for th
 
 ## Scaling our Workers
 
-We can use the --scale flag while doing docker-compose up, but it initially gave me errors that "port is already allocated" as I could not statically assign ports to workers that were dynamically created. They were all automatically getting assigned to port 80 as mentioned in the docker-compose file, and because that port is already occupied, the container was failing. So what I did is I set up a load balancer container and expose my worker containers ports to the load balancer and a Redis Database
-
-Redis is often referred as a *data structures* server. What this means is that Redis provides access to mutable data structures via a set of commands, which are sent using a *server-client* model with TCP sockets and a simple protocol. So different processes can query and modify the same data structures in a shared way. You'll need to use a Redis client to connect to Redis, not your browser. Look at this page for a few https://redis.io/clients, or use redis-cli, or even just plain Telnet.
+We can use the --scale flag while doing docker-compose up, but it initially gave me errors that "port is already allocated" as I could not statically assign ports to workers that were dynamically created. They were all automatically getting assigned to port 80 as mentioned in the docker-compose file, and because that port is already occupied, the container was failing. So what I did is I set up a Traefik reverse-proxy container which is a load balancer, and and expose my worker containers ports to the load balancer which will handle our scaling issues. In the future, I am trying to use a Redis Database, which is often referred as a *data structures* server. So different processes can query and modify the mutable data structures in a shared way. You'll need to use a Redis client to connect to Redis, not your browser. It can have some interesting application for our Spark cluster.
 
 
 # Stop and Remove all running containers

@@ -7,5 +7,8 @@
 # SPARK_WORKER_CORES: The total number of cores to be used by executors by each worker
 # SPARK_WORKER_INSTANCES: The number of workers per worker node.
 
-docker-compose up
+
+# add number of workers in NUM_OF_WORKERS
+
+docker-compose up --scale worker=[NUM_OF_WORKERS]
 
