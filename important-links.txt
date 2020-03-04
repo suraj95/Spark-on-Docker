@@ -22,4 +22,7 @@ Spark Executor Tuning
 Python vs Scala
 - https://www.kdnuggets.com/2018/05/apache-spark-python-scala.html
 
+Local mode vs Cluster mode
+- https://stackoverflow.com/questions/48261344/a-master-url-must-be-set-in-your-configuration-gives-lot-of-confusion
+
 
