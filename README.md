@@ -1,6 +1,6 @@
 # Start Spark Cluster
 
-This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number of workers for most student requirements. I will keep updating as I make progress.
+This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this project can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number most student requirements. I will keep updating as I make progress. 
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
 
@@ -8,7 +8,9 @@ The docker-compose.yml refers to two important properties, namely ports and expo
 
 2. Expose basically "exposes" ports without publishing them to the host machine - they’ll only be accessible to linked services. Only the internal port can be specified. Activates container to listen for a specific port only from the world inside of docker AND not accessible world outside of the docker.
 
-Spark Master is an application that coordinates resources allocation from slaves. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on a given worker node. Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver.
+Spark Master is an application that coordinates resources allocation from worker. Master does not perform any computations. Master is just a resource manager. And Spark worker is application on worker node which coordinates resources on a given worker node. Finally, Spark executor is application created by spark worker which performs tasks on worker node for driver. In case you are wondering, “-—master local[num_threads]” should only be used for local development and testing purposes, not with a cluster of machines such as with EMR, Docker, Mesos or Vagrant. 
+
+We run the following script to build our Spark Cluster
 
 
 	./build_cluster.sh
