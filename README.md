@@ -1,5 +1,9 @@
-![spark](https://img.shields.io/badge/-spark%202.4.5-yellow)
-![scala](https://img.shields.io/badge/-scala%202.11.12-orange)
+![spark](https://img.shields.io/badge/spark-2.4.5-yellow)
+![docker](https://img.shields.io/badge/docker-19.05.5-blue)
+![traefik](https://img.shields.io/badge/traefik-2.0.0-blue)
+![scala](https://img.shields.io/badge/scala-2.11.12-orange)
+![python](https://img.shields.io/badge/python-3.7.3-lightgrey)
+
 
 # Start Spark Cluster
 
