@@ -1,3 +1,6 @@
+https://img.shields.io/badge/-spark%202.4.5-yellow
+https://img.shields.io/badge/-scala%202.11.12-orange
+
 # Start Spark Cluster
 
 This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this project can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number most student requirements. I will keep updating as I make progress. 
