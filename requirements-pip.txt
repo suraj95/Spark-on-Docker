@@ -1,3 +1,3 @@
 numpy
 redis
-python-redis-cache
+redis-simple-cache-3k
