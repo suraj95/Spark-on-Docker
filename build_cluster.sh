@@ -9,5 +9,15 @@
 
 NUM_OF_WORKERS=3   #Ideally, this should be the number of cores on your machine
 
-docker-compose up --scale worker=$NUM_OF_WORKERS
+docker-compose up --scale worker=$NUM_OF_WORKERS # use --build before --scale to force a rebuild
 
+
+# Simply restarting a container doesn't make Docker use a new image, when the image was rebuilt in the 
+# meantime. Instead, Docker is fetching the image only before running the container. So the state after 
+# running a container is persistent.
+
+# That is why storing data in containers is considered as bad practice because a container has to be 
+# destroyed to update applications, the stored data inside would be lost too. This cause extra work to 
+# shutdown services, backup data and so on. So it's a smart solution to exclude those data completely 
+# from the container: We don't have to worry about our data, when its stored safely on the host and 
+# the container only holds the application itself.

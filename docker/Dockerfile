@@ -29,14 +29,7 @@ ENV PYTHONHASHSEED 0
 ENV PYTHONIOENCODING UTF-8
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
-# to download numpy these 5 packages + their dependencies must be installed:
-
-# Python3 - 70 mb
-# Python3-dev - 25 mb
-# gfortran - 20 mb
-# gcc - 70 mb
-# musl-dev -10 mb (used for tracking unexpected behaviour/debugging)
-
+# this installs packages mentioned in requirements-pip.txt
 ADD requirements-pip.txt .
 RUN pip3 install --upgrade pip setuptools && \
     pip3 install -r requirements-pip.txt

@@ -7,6 +7,8 @@
 
 # Start Spark Cluster
 
+![alt text](./images/spark-cluster.png)
+
 This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this project can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number most student requirements. I will keep updating as I make progress. 
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
@@ -28,7 +30,7 @@ Before I used a load balancer, Master was running at localhost:8080 and workers 
 
 At the top of the execution hierarchy are Spark jobs. Invoking an action inside a Spark application triggers the launch of a Spark job to fulfill it. The execution plan consists of assembling the job’s transformations into stages. A stage corresponds to a collection of tasks that all execute the same code, each on a different subset of the data. Each stage contains a sequence of transformations that can be completed without shuffling the full data. 
 
-![alt text](./screenshots/spark-architecture.png)
+![alt text](./images/spark-architecture.png)
 
 The main abstraction Spark provides is a resilient distributed dataset (RDD), which is a collection of elements partitioned across the nodes of the cluster that can be operated on in parallel. After Spark 2.0, RDDs are replaced by Dataset, which is strongly-typed like an RDD, but with richer optimizations under the hood. An RDD comprises a fixed number of partitions, each of which comprises a number of records. For the RDDs returned by so-called narrow transformations like map and filter, the records required to compute the records in a single partition reside in a single partition in the parent RDD. Each object is only dependent on a single object in the parent. In wide transformation like groupByKey and reduceByKey, the data required to compute the records in a single partition may reside in many partitions of the parent RDD. All of the tuples with the same key must end up in the same partition, processed by the same task. 
 
@@ -82,7 +84,7 @@ Python is dynamically typed and this reduces the speed and makes it higly prone 
 The two main resources that Spark (and YARN) think about are CPU and memory. Every Spark executor in an application has the same fixed number of cores and same fixed heap size. The cores property controls the number of concurrent tasks an executor can run. The memory property impacts the amount of data Spark can cache, as well as the maximum sizes of the shuffle data structures used for grouping, aggregations, and joins. Running executors with too much memory often results in excessive garbage collection delays. In the industry, 64GB is a rough guess at a good upper limit for a single executor. And the HDFS client has trouble with tons of concurrent threads, so at most 5 tasks per executor can achieve full write throughput. Spark is a parallel processing engine, but is limited in its ability to figure out the optimal amount of parallelism. 
 Every Spark stage has a number of tasks, each of which processes data sequentially. In tuning Spark jobs, this number is probably the single most important parameter in determining performance. This number determined by the way Spark groups RDDs into stages. 
 
-![alt text](./screenshots/memory-heirarchy.png)
+![alt text](./images/memory-heirarchy.png)
 
 The number of tasks in a stage is the same as the number of partitions in the last RDD in the stage. The number of partitions in an RDD is the same as the number of partitions in the RDD on which it depends. And for RDDs with no parents (RDDs produced by textFile or hadoopFile)have their partitions determined by the underlying MapReduce InputFormat that’s used. The primary concern is if the number of tasks is too small, then there are fewer tasks than slots available to run them in, the stage won’t be taking advantage of all the CPU available. A small number of tasks also mean that more memory pressure is placed on any aggregation operations that occur in each task. When the records destined for these aggregation operations do not easily fit in memory, some mayhem can ensue. First, holding many records in these data structures puts pressure on garbage collection, which can lead to pauses down the line. Second, when the records do not fit in memory, Spark will spill them to disk, which causes disk I/O and sorting.  This overhead during large shuffles is probably the number one cause of job stalls in the at industry. The in-memory size of the total shuffle data is hard to determine. The closest heuristic is to find the ratio between Shuffle Spill (Memory) metric and the Shuffle Spill (Disk) for a stage that ran. Then multiply the total shuffle write by this number. 
 
@@ -92,14 +94,13 @@ Data flows through Spark in the form of records. A record has two representation
 
 Whenever you have the power to make the decision about how data is stored on disk, use an extensible binary format like Avro, Parquet, Thrift, or Protobuf. Pick one of these formats and stick to it. To be clear, when one talks about using Avro, Thrift, or Protobuf on Hadoop, they mean that each record is a Avro/Thrift/Protobuf struct stored in a sequence file. JSON is just not worth it because a lot of energy will be wasted to power the CPU cycles spent parsing your files over and over again. Sequence files are binary files containing key-value pairs. They can be compressed at the record (key-value pair) or block levels. A Java API is typically used to write and read sequence files but a tool like Apache Sqoop can be used to convert to sequence files. Because they are binary, they have faster read/write than text-formatted files.
 
-![alt text](./screenshots/SequenceFile.png)
+![alt text](./images/SequenceFile.png)
 
 The small file problem arises when many small files cause memory overhead for the namenode referencing large amounts of small files. The concept of SequenceFile is to put each small file to a larger single file. For example, suppose there are 10,000 files of size 100KB, then we can write a program to put them into a single SequenceFile like above, where you can use filename to be the key and content to be the value. Sequence file is written to hold multiple key-value pairs and the key is a unique file metadata, like ingest filename or filename+timestamp and value is the content of the ingested file. Now you have a single file holding many ingested files as splittable key-value pairs. So if you loaded it into pig or hive, and grouped by key, then each file content would be its own record.
 
 ## Scaling our Workers
 
-We can use the --scale flag while doing docker-compose up, but it initially gave me errors that "port is already allocated" as I could not statically assign ports to workers that were dynamically created. They were all automatically getting assigned to port 80 as mentioned in the docker-compose file, and because that port is already occupied, the container was failing. So what I did is I set up a Traefik reverse-proxy container which is a load balancer, and expose my worker containers ports to the load balancer which will handle our scaling issues. In the future, I am trying to use a Redis Database, which is often referred as a *data structures* server. So different processes can query and modify the mutable data structures in a shared way. You'll need to use a Redis client to connect to Redis, not your browser. It can have some interesting application for our Spark cluster.
-
+We can use the --scale flag while doing docker-compose up, but it initially gave me errors that "port is already allocated" as I could not statically assign ports to workers that were dynamically created. They were all automatically getting assigned to port 80 as mentioned in the docker-compose file, and because that port is already occupied, the container was failing. So what I did is I set up a Traefik reverse-proxy container which is a load balancer, and expose my worker containers ports to the load balancer which will handle our scaling issues. Currently, I am trying to use a Redis Database, which is often referred as a *data structures* server. So different processes can query and modify the mutable data structures in a shared way. You'll need to use a Redis client to connect to Redis, not your browser. It can have some interesting application for our Spark cluster, like its key-value store that we can use as a cache for our most frequently used data. 
 
 # Stop and Remove all running containers
 
