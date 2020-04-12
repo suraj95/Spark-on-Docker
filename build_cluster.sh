@@ -17,7 +17,7 @@ docker-compose up --scale worker=$NUM_OF_WORKERS # use --build before --scale to
 # running a container is persistent.
 
 # That is why storing data in containers is considered as bad practice because a container has to be 
-# destroyed to update applications, the stored data inside would be lost too. This cause extra work to 
+# destroyed to update applications, the stored data inside would be lost too. This causes extra work to 
 # shutdown services, backup data and so on. So it's a smart solution to exclude those data completely 
 # from the container: We don't have to worry about our data, when its stored safely on the host and 
 # the container only holds the application itself. The most we can do is cache our most frequently used

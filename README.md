@@ -6,11 +6,11 @@
 ![python](https://img.shields.io/badge/python-3.7.3-lightgrey)
 
 
-# Start Spark Cluster
+# Spark on Docker
 
 ![alt text](./images/spark-cluster.png)
 
-This is a sample tutorial on how to get set up a scalable cluster with Apache Spark. At the moment, this project can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number most student requirements. I will keep updating as I make progress. 
+This is a sample tutorial on how to get set up a scalable cluster with Apache Spark using Docker. At the moment, this project can reliably support upto 3 workers, beyond which the cluster is a bit unstable, i.e. workers successfully get created and connected to master, but the spark job can get hanged. Anyways, 3 is a decent number most student requirements. I will keep updating as I make progress. 
 
 The docker-compose.yml refers to two important properties, namely ports and expose:
 

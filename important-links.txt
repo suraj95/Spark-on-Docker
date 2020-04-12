@@ -31,5 +31,5 @@ Getting Started with Redis, Apache Spark and Python
 Give Spark a 45x speed boost with Redis
 - https://www.infoworld.com/article/3045083/give-spark-a-45x-speed-boost-with-redis.html
 
-Simple redis based cache for storing results of python function calls, json encoded strings or html.
-- https://github.com/vivekn/redis-simple-cache
+Simple redis cache for Python functions
+- https://github.com/taylorhakes/python-redis-cache
