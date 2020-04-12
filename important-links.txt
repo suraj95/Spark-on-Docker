@@ -25,4 +25,11 @@ Python vs Scala
 Local mode vs Cluster mode
 - https://stackoverflow.com/questions/48261344/a-master-url-must-be-set-in-your-configuration-gives-lot-of-confusion
 
+Getting Started with Redis, Apache Spark and Python 
+- https://redislabs.com/blog/getting-started-redis-apache-spark-python/
 
+Give Spark a 45x speed boost with Redis
+- https://www.infoworld.com/article/3045083/give-spark-a-45x-speed-boost-with-redis.html
+
+Simple redis based cache for storing results of python function calls, json encoded strings or html.
+- https://github.com/vivekn/redis-simple-cache

@@ -20,4 +20,5 @@ docker-compose up --scale worker=$NUM_OF_WORKERS # use --build before --scale to
 # destroyed to update applications, the stored data inside would be lost too. This cause extra work to 
 # shutdown services, backup data and so on. So it's a smart solution to exclude those data completely 
 # from the container: We don't have to worry about our data, when its stored safely on the host and 
-# the container only holds the application itself.
+# the container only holds the application itself. The most we can do is cache our most frequently used
+# data using Redis.
