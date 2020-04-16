@@ -9,7 +9,7 @@
 
 NUM_OF_WORKERS=3   #Ideally, this should be the number of cores on your machine
 
-docker-compose up --build --scale worker=$NUM_OF_WORKERS # use --build before --scale to force a rebuild
+docker-compose up --scale worker=$NUM_OF_WORKERS # use --build before --scale to force a rebuild
 
 
 # Simply restarting a container doesn't make Docker use a new image, when the image was rebuilt in the 

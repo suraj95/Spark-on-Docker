@@ -33,3 +33,6 @@ Give Spark a 45x speed boost with Redis
 
 Simple redis based cache for storing results of python function calls, json encoded strings or html (forked from vivekn/redis-simple-cache for python 3 support)
 - https://github.com/ohanetz/redis-simple-cache-3k
+
+Uber leverages Apache Livy to handle Spark job problems like data source diversity and dependency issues. 
+- https://eng.uber.com/uscs-apache-spark/
