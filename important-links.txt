@@ -1,38 +1,40 @@
-Get numpy in a docker container
+Important links
+
+1. Get numpy in a docker container
 — https://stackoverflow.com/questions/57763773/install-numpy-requirement-in-a-dockerfile-results-in-error
 
-Docker compose: ports and expose
+2. Docker compose: ports and expose
 - https://stackoverflow.com/questions/40801772/what-is-the-difference-between-docker-compose-ports-vs-expose
 
-Spark Configuration: memory/instance/cores
+3. Spark Configuration: memory/instance/cores
 - https://stackoverflow.com/questions/26645293/spark-configuration-memory-instance-cores
 
-Setting up a Scalable Spark Infrastructure with Docker
+4. Setting up a Scalable Spark Infrastructure with Docker
 - https://www.pavanpkulkarni.com/blog/13-spark-on-docker/
 
-Number of Cores vs Number of Executors
+5. Number of Cores vs Number of Executors
 - https://stackoverflow.com/questions/24622108/apache-spark-the-number-of-cores-vs-the-number-of-executors
 
-How to tune your Apache Spark Jobs
+6. How to tune your Apache Spark Jobs
 - https://blog.cloudera.com/how-to-tune-your-apache-spark-jobs-part-2/
 
-Spark Executor Tuning
+7. Spark Executor Tuning
 - https://www.youtube.com/watch?v=V9E-bWarMNw
 
-Python vs Scala
+8. Python vs Scala
 - https://www.kdnuggets.com/2018/05/apache-spark-python-scala.html
 
-Local mode vs Cluster mode
+9. Local mode vs Cluster mode
 - https://stackoverflow.com/questions/48261344/a-master-url-must-be-set-in-your-configuration-gives-lot-of-confusion
 
-Getting Started with Redis, Apache Spark and Python 
+10. Getting Started with Redis, Apache Spark and Python 
 - https://redislabs.com/blog/getting-started-redis-apache-spark-python/
 
-Give Spark a 45x speed boost with Redis
+11. Give Spark a 45x speed boost with Redis
 - https://www.infoworld.com/article/3045083/give-spark-a-45x-speed-boost-with-redis.html
 
-Simple redis based cache for storing results of python function calls, json encoded strings or html (forked from vivekn/redis-simple-cache for python 3 support)
+12. Simple redis based cache for storing results of python function calls, json encoded strings or html (forked from vivekn/redis-simple-cache for python 3 support)
 - https://github.com/ohanetz/redis-simple-cache-3k
 
-Uber leverages Apache Livy to handle Spark job problems like data source diversity and dependency issues. 
+13. Uber leverages Apache Livy to handle Spark job problems like data source diversity and dependency issues. 
 - https://eng.uber.com/uscs-apache-spark/
