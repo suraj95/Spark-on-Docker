@@ -3,4 +3,3 @@
 screenshot_ignore.png
 conf/
 .DS_Store
-build_images.sh
